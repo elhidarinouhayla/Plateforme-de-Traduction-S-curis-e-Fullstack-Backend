@@ -1,12 +1,19 @@
 import os
-from huggingface_hub import InferenceClient
+from config import HF_TOKEN
+import requests
 
-client = InferenceClient(
-    provider="hf-inference",
-    api_key=os.environ["HF_TOKEN"],
-)
 
-result = client.translation(
-    "Меня зовут Вольфганг и я живу в Берлине",
-    model="Helsinki-NLP/opus-mt-fr-en",
-)
+def translate(input_text, language):
+    API_URL = "https://router.huggingface.co/hf-inference/models/Helsinki-NLP/opus-mt-fr-en"
+    headers = {
+        "Authorization": f"Bearer {os.environ['HF_TOKEN']}",
+    }
+
+    def query(payload):
+        response = requests.post(API_URL, headers=headers, json=payload)
+        return response.json()
+
+    output = query({
+        "inputs": input_text,
+    })
+    return output
