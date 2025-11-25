@@ -2,11 +2,11 @@ import os
 from config import HF_TOKEN
 import requests
 
-
+print(HF_TOKEN)
 def translate(input_text, language):
-    API_URL = "https://router.huggingface.co/hf-inference/models/Helsinki-NLP/opus-mt-fr-en"
+    API_URL = f"https://router.huggingface.co/hf-inference/models/Helsinki-NLP/opus-mt-{language}"
     headers = {
-        "Authorization": f"Bearer {os.environ['HF_TOKEN']}",
+        "Authorization": f"Bearer {HF_TOKEN}",
     }
 
     def query(payload):
@@ -17,3 +17,4 @@ def translate(input_text, language):
         "inputs": input_text,
     })
     return output
+print( translate("Hello Hassan", "en-fr"))
