@@ -55,15 +55,18 @@ def login(user: CreateUser, db: session = Depends(get_db)):
 
 
 @app.post("/traslate")
-def translate_text(data: TraductionShema, user=Depends(verify_token)):
+def translate_text(data: TraductionShema, 
+                   user=Depends(verify_token)
+                   ):
+        return translate(data.text, data.language)
 
-    try:
-        result = translate(data.text, data.language)
-        if result is None:
-            raise Exception("Erreue : réponse HuggingFace invalide")
-        return {"translated_text": result}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    # try:
+    #     result = translate(data.text, data.language)
+    #     if result is None:
+    #         raise Exception("Erreue : réponse HuggingFace invalide")
+    #     return {"translated_text": result}
+    # except Exception as e:
+    #     raise HTTPException(status_code=500, detail=str(e))
 
     
 
