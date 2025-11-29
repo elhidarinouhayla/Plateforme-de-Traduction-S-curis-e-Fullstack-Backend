@@ -7,31 +7,33 @@
 
 ## Objectif du projet
 
-Les maladies cardiovasculaires sont la première cause de mortalité dans le monde, responsables de 17,9 millions de décès par an.
-
-L’objectif de ce projet est de fournir une API capable d’estimer le risque de maladie cardiovasculaire d’un patient à partir de ses données cliniques.
+Le backend a pour rôle central de fournir une API sécurisée et fiable pour la traduction de textes entre le français et l’anglais, tout en garantissant que seules les personnes authentifiées peuvent y accéder
 
 
 ## Structure du projet
 ```
-📦 project
+backend/
 │
-├── 📁 ML
-│   ├── eda_notebook.ipynb
-│   ├── pipeline.py
-│   └── 📁 data
-│       └── data_sante.csv
+├── models/
+│   └── model.py      
 │
-├── 📁 models
-│   └── model.py
+├── tests/
+│   └── test_endpoint.py   
 │
-├── 📁 tests
-│   └── test_main.py
+├── .env             
+├── .gitignore       
+├── auth.py         
+├── translate.py       
+├── config.py        
+├── database.py      
+├── main.py         
 │
-├── database.py
-├── main.py
-├── requirements.txt
-└── README.md
+├── Dockerfile             
+├── docker-compose.yml     
+│
+├── requirements.txt      
+└── README.md             
+
 ```
 
 
@@ -42,7 +44,7 @@ L’objectif de ce projet est de fournir une API capable d’estimer le risque d
 1. Cloner le dépôt GitHub :  
 
 ```shell
-    git clone https://github.com/codehass/ml-health-api.git
+    git clone https://github.com/elhidarinouhayla/Plateforme-de-Traduction-S-curis-e-Fullstack-Backend.git
     cd project
 ```
 
@@ -78,98 +80,106 @@ L’objectif de ce projet est de fournir une API capable d’estimer le risque d
 Astuce : Le paramètre --reload permet à l’API de se mettre à jour automatiquement à chaque modification du code, très pratique pour le développement.
 
 
-## 🧠 Partie machine learning 
-### Etapes principales :
- 1- Chargement du dataset data_sante.csv
+## Configuration
 
- 2- Nettoyage et transformation des données (catégorielles / numériques)
-
- 3- Séparation en X (features) et y (target)
-
- 4-Création d’un Pipeline Scikit-learn
-
- 5-Entraînement et sauvegarde du modèle avec joblib.dump()
-
- 6- (Bonus) Optimisation des hyperparamètres via GridSearchCV
-
- 7- Intégration du modèle dans FastAPI → endpoint /predict_risk
-
- ## 📊 Évaluation du modèle
- Deux modèles ont été testés pour la prédiction :
-
-| Modèle                 | Accuracy | Precision | Recall | F1-Score |
-| ---------------------- | -------- | --------- | ------ | -------- |
-| RandomForestClassifier | 0.9811   | 0.9817    | 0.9877 | 0.9847   |
-| KNeighborsClassifier   | 0.8447   | 0.9013    | 0.8405 | 0.8698   |
-
-==> RandomForestClassifier a été retenu pour l’intégration dans l’API grâce à ses meilleures performances globales.
-
-## 🧩 Endpoints FastAPI
-
-| Méthode  | Endpoint        | Description                                     |
-| -------- | --------------- | ----------------------------------------------- |
-| **POST** | `/patients`     | Ajouter un nouveau patient                      |
-| **GET**  | `/patients`     | Lister tous les patients enregistrés            |
-| **Get**  | `/patient{id}`  | Récupère un patient par id                      |
-| **Get**  | `/predict_risk` | Prédire le risque cardiovasculaire d’un patient |
-
-
-## 🧪 Tests Unitaires
-
-Les tests sont réalisés avec pytest et TestClient de FastAPI.
-Ils permettent de vérifier que les endpoints fonctionnent correctement, notamment /predict_risk.
-
-Lancer les tests :
 ```shell
-    pytest
+HF_TOKEN=ton_token_huggingface
+SECRET_KEY=une_clef_secrete
+ALGORITHM=HS256
+```
+## Endpoint:/register
+
+POST /register
+Body JSON:
+ 
+```shell
+{
+  "username": "admin",
+  "password": "abcd"
+}
 ```
 
-## 🗃️ Base de données
 
-  - SQLite utilisée pour stocker les informations des patients.
+## Endpoint:/login
 
-  - Gérée via SQLAlchemy.
+POST /login
 
-  - Modèles définis dans models/model.py.
+Authentification
+Body JSON:
 
-## 📘 Documentation
-
- - Documentation interactive générée automatiquement par Swagger :
- ```shell
-      http://127.0.0.1:8000/docs
+```shell
+{
+  "username": "admin",
+  "password": "abcd"
+}
 ```
 
-## 🧩 Outils utilisés
+Reponse:
 
- - FastAPI – Framework web rapide et moderne
+```shell
+{
+  "token": "xxxxx.yyyyy.zzzzz"
+}
+```
 
- - SQLite – Base de données légère et intégrée
+## Endpoit:/translate
 
- - SQLAlchemy – ORM pour interagir avec la base
+POST/translate
+Protégé : nécessite JWT dans le header Authorization: Bearer <JWT>
 
- - Scikit-learn – Entraînement du modèle ML
+Body JSON :
 
- - Pydantic – Validation des données d’entrée
+```shell
+{
+  "text": "Bonjour",
+  "direction": "fr-en"
+}
+```
+Response JSON:
 
- - Pytest – Tests unitaires
-
- - Swagger UI – Documentation automatique
-
-
-
- ## 🧠 Modalités pédagogiques
-
- - Projet réalisé en binôme favorisant la collaboration et la répartition des rôles.
-
- - Gestion des versions avec Git & Gitflow.
-
- - Suivi du planning sur Jira.
-
- - Durée du projet : 5 jours — du 27/10/2025 au 31/10/2025.
+```shell
+{
+  "translation": "Hello"
+}
+```
 
 
- ## Contributeurs
 
- El Ouardy Hassan
 
- El Hidari Nouhayla
+## Tests Unitaires
+
+Les tests vérifient :
+
+ - endpoint register
+ - endpoint login
+ - endpoint translate
+
+
+
+### Commande pour lancer les tests :
+
+```shell
+pytest
+```
+
+## Dockerfile
+
+Le Dockerfile permet de construire une image Docker pour le backend FastAPI.
+
+
+Il fait les étapes suivantes :
+
+  1. Utilise Python 3.11 slim comme base
+
+  2. Définit le dossier de travail /app
+
+  3. Copie le fichier requirements.txt et installe les dépendances Python
+
+  4. Copie tout le code du backend dans l’image
+
+  5. Expose le port 8000 pour l’API
+
+  6. Lance le serveur Uvicorn à l’intérieur du conteneur
+
+=> Cela permet de déployer facilement l’API sur n’importe quelle machine sans config supplémentaire
+
