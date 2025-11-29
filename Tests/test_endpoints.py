@@ -13,27 +13,28 @@ from main import app
 def client():
      return TestClient(app)
 
-def test_register(client):
-     
-     resp = client.post("/register")
-     assert resp.status_code == 200
 
 
-
-
-
-def test_login(client):
-
-    resp = client.post("/login", json={"username": "user1", "password": "pass"})
+def test_endpoint(client):
+    
+#  tester endpoint register
+    resp = client.post("/register", json={"username": "user", "password": "pass"})
+    assert resp.status_code == 200
+    
+#  tester endpoint login
+    resp = client.post("/login", json={"username": "user", "password": "pass"})
     assert resp.status_code == 200
 
+    token = resp.json()["token"]
+    
+#  tester endpoint translate
+    headers = {"Authorisation": f"bearer {token}"}
+    resp = client.post("/translate", json={"text": "text", "language": "fr-en"}, headers=headers)
+    assert resp.status == 200
+    assert "translation" in resp.json()
 
-
-def test_translate(client):
      
-     resp = client.post("/translate", json={"username": "user1", "password": "pass"})
-     assert resp.status_code == 200
-
+     
 
 
 
