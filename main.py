@@ -54,7 +54,7 @@ def login(user: CreateUser, db: session = Depends(get_db)):
     return {"token": token}
 
 
-@app.post("/traslate")
+@app.post("/translate")
 def translate_text(data: TraductionShema, 
                    user=Depends(verify_token)
                    ):

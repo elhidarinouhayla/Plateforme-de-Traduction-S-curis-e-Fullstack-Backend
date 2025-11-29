@@ -2,7 +2,7 @@ import os
 from config import HF_TOKEN
 import requests
 
-print(HF_TOKEN)
+# print(HF_TOKEN)
 def translate(input_text, language):
     API_URL = f"https://router.huggingface.co/hf-inference/models/Helsinki-NLP/opus-mt-{language}"
     headers = {
@@ -17,4 +17,4 @@ def translate(input_text, language):
         "inputs": input_text,
     })
     return output
-print( translate("Hello Hassan", "en-fr"))
+# print( translate("Hello Hassan", "en-fr"))
