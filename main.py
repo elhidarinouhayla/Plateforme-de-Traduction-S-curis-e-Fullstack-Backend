@@ -60,13 +60,7 @@ def translate_text(data: TraductionShema,
                    ):
         return translate(data.text, data.language)
 
-    # try:
-    #     result = translate(data.text, data.language)
-    #     if result is None:
-    #         raise Exception("Erreue : réponse HuggingFace invalide")
-    #     return {"translated_text": result}
-    # except Exception as e:
-    #     raise HTTPException(status_code=500, detail=str(e))
+  
 
     
 

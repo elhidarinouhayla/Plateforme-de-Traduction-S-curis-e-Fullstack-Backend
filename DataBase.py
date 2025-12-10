@@ -1,8 +1,8 @@
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-from config import USER,PORT,HOST,PASSWORD, DATABASE
-# print(USER,PORT,HOST,PASSWORD,DATABASE)
+from config import USER,PORT,HOST,PASSWORD,DATABASE
+
 
 
 # # Creer la base
